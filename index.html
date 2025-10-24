@@ -1,62 +1,70 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🐄 Cow Run Away</title>
   <style>
     body {
-      background: url('fondo_universo.png') center center / cover no-repeat;
-      overflow: hidden;
-      height: 100vh;
       margin: 0;
-      cursor: crosshair;
+      padding: 0;
+      overflow: hidden;
+      background: url('fondo-universo.png') center/cover no-repeat;
+      height: 100vh;
+      position: relative;
+      font-family: 'Poppins', sans-serif;
     }
 
-    #vaca {
+    .vaca {
       position: absolute;
-      width: 140px;
-      transition: left 0.1s linear, top 0.1s linear, transform 0.2s;
-      filter: drop-shadow(0 0 15px #000000a0);
-      user-select: none;
+      width: 120px;
+      transition: transform 0.1s linear;
+      cursor: pointer;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      opacity: 0.8;
     }
   </style>
 </head>
 <body>
-  <img id="vaca" src="vaca.png" alt="vaca" />
-  <audio id="mugido" src="muuu.mp3"></audio>
+  <img src="vaca.png" alt="Vaca" class="vaca" id="vaca">
+  <audio id="muu" src="muuu.mp3"></audio>
+
+  <footer>© 2025 Jean Simon H.</footer>
 
   <script>
-    const vaca = document.getElementById("vaca");
-    const sonido = document.getElementById("mugido");
+    const vaca = document.getElementById('vaca');
+    const sonido = document.getElementById('muu');
 
-    // Posición inicial aleatoria
-    vaca.style.left = Math.random() * (window.innerWidth - 140) + "px";
-    vaca.style.top = Math.random() * (window.innerHeight - 140) + "px";
+    function moverVaca() {
+      const maxX = window.innerWidth - vaca.clientWidth;
+      const maxY = window.innerHeight - vaca.clientHeight;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
-    document.addEventListener("mousemove", (e) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      const rect = vaca.getBoundingClientRect();
-      const distancia = Math.hypot(rect.x - x, rect.y - y);
+      vaca.style.transform = `translate(${x}px, ${y}px)`;
 
-      // La vaca huye si el cursor se acerca a menos de 250 píxeles
-      if (distancia < 250) {
-        const newX = Math.random() * (window.innerWidth - 140);
-        const newY = Math.random() * (window.innerHeight - 140);
-        vaca.style.left = `${newX}px`;
-        vaca.style.top = `${newY}px`;
-        vaca.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
-
-        // Control del sonido: si ya se está reproduciendo, lo detiene antes de reiniciar
-        if (!sonido.paused) {
-          sonido.pause();
-          sonido.currentTime = 0;
-        }
-        sonido.play();
+      // Detener sonido anterior si está reproduciéndose
+      if (!sonido.paused) {
+        sonido.pause();
+        sonido.currentTime = 0;
       }
-    });
+      sonido.play();
+    }
+
+    vaca.addEventListener('mouseenter', moverVaca);
+
+    // Mover vaca cada 0.5 segundos automáticamente
+    setInterval(moverVaca, 500);
   </script>
 </body>
 </html>
-
